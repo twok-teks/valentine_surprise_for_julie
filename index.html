@@ -1,0 +1,857 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Valentine Question for Julie &lt;3</title>
+  <style>
+    :root{
+      --bg1:#ffe6f1;
+      --bg2:#ffd3e6;
+      --card:#ffffffcc;
+      --ink:#2a1b27;
+      --pink:#ff4fa3;
+      --pink2:#ff86c6;
+      --shadow: 0 18px 60px rgba(30, 0, 20, 0.15);
+      --ring: 0 0 0 6px rgba(255,79,163,0.18);
+      --radius: 28px;
+      --font: ui-rounded, system-ui, -apple-system, Segoe UI, Roboto, "Helvetica Neue", Arial;
+    }
+
+    *{ box-sizing:border-box; }
+    html,body{ height:100%; }
+    body{
+      margin:0;
+      font-family: var(--font);
+      color: var(--ink);
+      overflow:hidden;
+      background:
+        radial-gradient(1200px 700px at 20% 15%, #ffffff 0%, transparent 55%),
+        radial-gradient(900px 600px at 85% 20%, #ffffff 0%, transparent 55%),
+        linear-gradient(160deg, var(--bg1), var(--bg2));
+    }
+
+    .halftone{
+      position:absolute; inset:-40px;
+      background-image: radial-gradient(rgba(255, 79, 163, 0.18) 1px, transparent 1px);
+      background-size: 18px 18px;
+      opacity:0.25;
+      pointer-events:none;
+      transform: rotate(-6deg);
+    }
+
+    .wrap{
+      position:relative;
+      height:100%;
+      display:grid;
+      place-items:center;
+      padding:18px;
+    }
+
+    .card{
+      width:min(980px, 96vw);
+      border-radius: var(--radius);
+      background: var(--card);
+      box-shadow: var(--shadow);
+      border: 1px solid rgba(255,255,255,0.7);
+      backdrop-filter: blur(10px);
+      padding: 34px 28px;
+      position:relative;
+    }
+
+    .badge{
+      display:inline-flex;
+      align-items:center;
+      gap:10px;
+      padding: 12px 16px;
+      border-radius: 999px;
+      background: rgba(255, 79, 163, 0.12);
+      border: 1px dashed rgba(255, 79, 163, 0.4);
+      font-weight:900;
+      letter-spacing:0.2px;
+      font-size: 15px;
+    }
+    .badge .dot{
+      width:10px; height:10px;
+      border-radius:999px;
+      background: var(--pink);
+      box-shadow: 0 0 0 6px rgba(255,79,163,0.15);
+    }
+
+    h1{
+      margin: 14px 0 10px;
+      font-size: clamp(32px, 5.2vw, 58px);
+      line-height:1.04;
+      letter-spacing:-0.6px;
+    }
+
+    p{
+      margin: 0 0 12px;
+      font-size: clamp(15px, 2.3vw, 20px);
+      opacity:0.85;
+      max-width: 64ch;
+    }
+
+    .stage{
+      position: relative;
+      width: min(900px, 94vw);
+      height: min(560px, 66vh); /* slightly taller */
+      margin: 14px auto 0;
+      border-radius: 24px;
+      background:
+        radial-gradient(600px 260px at 30% 30%, rgba(255,255,255,0.85), rgba(255,255,255,0.35)),
+        linear-gradient(180deg, rgba(255,255,255,0.55), rgba(255,255,255,0.22));
+      border: 1px solid rgba(255,255,255,0.7);
+      box-shadow: 0 14px 40px rgba(30,0,20,0.10) inset;
+      overflow:hidden;
+      touch-action: none;
+    }
+
+    .instruction{
+      position:absolute;
+      top: 12px;
+      left: 50%;
+      transform: translateX(-50%);
+      padding: 10px 14px;
+      border-radius: 999px;
+      background: rgba(255,255,255,0.78);
+      border: 1px solid rgba(255, 79, 163, 0.18);
+      box-shadow: 0 14px 40px rgba(30,0,20,0.10);
+      font-weight: 950;
+      font-size: 14px;
+      opacity: 0.92;
+      user-select:none;
+      pointer-events:none;
+      text-align:center;
+      max-width: 92%;
+    }
+
+    .zones{
+      position:absolute;
+      inset: 58px 16px 120px 16px; /* more bottom padding */
+      display:grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+      align-items: stretch;
+    }
+
+    .zone{
+      border-radius: 24px;
+      border: 2px dashed rgba(255, 79, 163, 0.30);
+      background: rgba(255,255,255,0.42);
+      box-shadow: inset 0 0 0 1px rgba(255,255,255,0.55);
+      display:grid;
+      place-items:center;
+      position:relative;
+      overflow:hidden;
+      transform-origin: center center;
+      transition: transform 180ms ease, box-shadow 180ms ease, border-color 180ms ease, background 180ms ease, opacity 200ms ease;
+      will-change: transform;
+    }
+
+    .zoneTitle{
+      display:flex;
+      align-items:center;
+      gap:12px;
+      font-weight:1000;
+      letter-spacing:-0.2px;
+      font-size: clamp(18px, 3vw, 30px);
+      padding: 14px 16px;
+      border-radius: 999px;
+      background: rgba(255,255,255,0.74);
+      border: 1px solid rgba(255, 79, 163, 0.18);
+      box-shadow: 0 14px 40px rgba(30,0,20,0.10);
+      user-select:none;
+    }
+    .zoneTitle .pillIcon{
+      width: 34px;
+      height: 34px;
+      border-radius: 999px;
+      display:grid;
+      place-items:center;
+      background: rgba(255, 79, 163, 0.12);
+      border: 1px solid rgba(255, 79, 163, 0.15);
+    }
+
+    .zone.yes{
+      border-color: rgba(255, 79, 163, 0.35);
+      background:
+        radial-gradient(500px 220px at 30% 20%, rgba(255, 79, 163, 0.14), transparent 60%),
+        rgba(255,255,255,0.40);
+    }
+    .zone.no{
+      border-color: rgba(42, 27, 39, 0.18);
+      background:
+        radial-gradient(500px 220px at 70% 20%, rgba(42, 27, 39, 0.08), transparent 60%),
+        rgba(255,255,255,0.38);
+    }
+
+    .zone.yes.glow{
+      border-color: rgba(255, 79, 163, 0.62);
+      box-shadow:
+        inset 0 0 0 1px rgba(255,255,255,0.6),
+        0 0 0 8px rgba(255, 79, 163, 0.12),
+        0 18px 70px rgba(255, 79, 163, 0.22);
+      transform: translateY(-2px) scale(1.01);
+      background:
+        radial-gradient(600px 260px at 40% 20%, rgba(255, 79, 163, 0.22), transparent 65%),
+        rgba(255,255,255,0.46);
+    }
+
+    .sparkle{
+      position:absolute;
+      font-size: 18px;
+      opacity:0;
+      transform: scale(0.8);
+      animation: sparkle 520ms ease forwards;
+      pointer-events:none;
+      user-select:none;
+      filter: drop-shadow(0 10px 12px rgba(40,0,20,0.10));
+    }
+    @keyframes sparkle{
+      0%   { opacity:0; transform: translateY(6px) scale(0.75); }
+      45%  { opacity:1; transform: translateY(0px) scale(1.05); }
+      100% { opacity:0; transform: translateY(-10px) scale(1.0); }
+    }
+
+    .poof{
+      position:absolute;
+      width: 14px; height: 14px;
+      border-radius: 999px;
+      background: rgba(255,79,163,0.28);
+      filter: blur(0.6px);
+      opacity:0;
+      animation: poof 700ms ease forwards;
+      pointer-events:none;
+    }
+    @keyframes poof{
+      0%   { opacity:0; transform: translate(0,0) scale(0.6); }
+      20%  { opacity:0.9; }
+      100% { opacity:0; transform: translate(var(--dx), var(--dy)) scale(1.8); }
+    }
+
+    .teddy{
+      position:absolute;
+      left: 50%;
+      top: 92%; /* lower teddy */
+      transform: translate(-50%, -50%);
+      width: 106px;
+      height: 106px;
+      border-radius: 28px;
+      background: rgba(255,255,255,0.74);
+      border: 1px solid rgba(255, 79, 163, 0.20);
+      box-shadow: 0 18px 55px rgba(30,0,20,0.18);
+      display:grid;
+      place-items:center;
+      user-select:none;
+      -webkit-user-select:none;
+      cursor: grab;
+      touch-action: none;
+      transition: transform 120ms ease;
+    }
+    .teddy:active{ cursor: grabbing; }
+    .teddy.grabbed{ transform: translate(-50%, -50%) scale(1.05); }
+    .teddy .emoji{
+      font-size: 62px;
+      transform: translateY(2px);
+      filter: drop-shadow(0 12px 12px rgba(40,0,20,0.12));
+    }
+
+    .toast{
+      position:absolute;
+      left: 50%;
+      bottom: 14px;
+      transform: translateX(-50%);
+      padding: 10px 14px;
+      border-radius: 999px;
+      background: rgba(255,255,255,0.80);
+      border: 1px solid rgba(255, 79, 163, 0.18);
+      box-shadow: 0 14px 45px rgba(30,0,20,0.12);
+      font-weight: 950;
+      opacity: 0;
+      pointer-events:none;
+      transition: opacity 200ms ease, transform 200ms ease;
+      user-select:none;
+      text-align:center;
+      max-width: 92%;
+      white-space: nowrap;
+    }
+    .toast.show{
+      opacity: 1;
+      transform: translateX(-50%) translateY(-4px);
+    }
+
+    .zone.no.gone{
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    .pop{
+      position:absolute;
+      inset:0;
+      display:grid;
+      place-items:center;
+      pointer-events:none;
+      opacity:0;
+    }
+    .pop.show{ animation: popIn 420ms cubic-bezier(.2,1.2,.2,1) forwards; }
+    .pop.hide{ animation: popOut 900ms ease forwards; }
+    .popText{
+      text-align:center;
+      padding: 18px 22px;
+      border-radius: 26px;
+      background: rgba(255,255,255,0.88);
+      border: 1px solid rgba(255,255,255,0.8);
+      box-shadow: 0 22px 70px rgba(30,0,20,0.18);
+      font-weight: 1000;
+      letter-spacing: -0.4px;
+      font-size: clamp(26px, 4.5vw, 54px);
+      line-height: 1.04;
+      position:relative;
+    }
+    .popText::before{
+      content:"";
+      position:absolute;
+      inset:-24px;
+      background:
+        radial-gradient(circle at 20% 30%, rgba(255,79,163,0.35) 0 3px, transparent 4px),
+        radial-gradient(circle at 80% 25%, rgba(255,79,163,0.30) 0 3px, transparent 4px),
+        radial-gradient(circle at 15% 80%, rgba(255,79,163,0.26) 0 3px, transparent 4px),
+        radial-gradient(circle at 85% 78%, rgba(255,79,163,0.32) 0 3px, transparent 4px);
+      opacity:0.9;
+      pointer-events:none;
+    }
+    @keyframes popIn{
+      0%   { opacity:0; transform: scale(0.55); }
+      70%  { opacity:1; transform: scale(1.12); }
+      100% { opacity:1; transform: scale(1.0); }
+    }
+    @keyframes popOut{
+      0%   { opacity:1; transform: scale(1.0); }
+      60%  { opacity:1; transform: scale(1.02); }
+      100% { opacity:0; transform: scale(0.92); }
+    }
+
+    .overlay{
+      position:absolute;
+      inset:0;
+      display:grid;
+      place-items:center;
+      background: rgba(255, 230, 241, 0.70);
+      backdrop-filter: blur(6px);
+      opacity:0;
+      pointer-events:none;
+      transition: opacity 240ms ease;
+    }
+    .overlay.show{
+      opacity:1;
+      pointer-events:auto;
+    }
+    .result{
+      width:min(560px, 92vw);
+      border-radius: 26px;
+      background: rgba(255,255,255,0.90);
+      border: 1px solid rgba(255,255,255,0.78);
+      box-shadow: var(--shadow);
+      padding: 18px 18px 16px;
+      text-align:center;
+      position:relative;
+    }
+    .picture-slot{
+      margin: 10px auto 10px;
+      width: min(440px, 84vw);
+      aspect-ratio: 16/10;
+      border-radius: 20px;
+      border: 2px dashed rgba(255, 79, 163, 0.35);
+      background:
+        radial-gradient(600px 260px at 30% 20%, rgba(255, 79, 163, 0.12), transparent 60%),
+        rgba(255,255,255,0.65);
+      display:grid;
+      place-items:center;
+      overflow:hidden;
+    }
+    .picture-slot img{
+      width:100%;
+      height:100%;
+      object-fit: cover;
+      display:block;
+    }
+
+    .close{
+      margin-top: 10px;
+      padding: 11px 16px;
+      border-radius: 999px;
+      border: 1px solid rgba(255, 79, 163, 0.22);
+      background: rgba(255,255,255,0.82);
+      cursor:pointer;
+      font-weight:900;
+      font-size: 15px;
+    }
+    .close:focus{ outline:none; box-shadow: var(--ring); }
+
+    .heart{
+      position: absolute;
+      top: -40px;
+      font-size: 18px;
+      will-change: transform, opacity;
+      animation: fall linear forwards;
+      filter: drop-shadow(0 8px 8px rgba(40,0,20,0.10));
+      user-select:none;
+      pointer-events:none;
+    }
+    @keyframes fall{
+      0%   { transform: translateY(-40px) translateX(0) rotate(0deg); opacity: 0; }
+      10%  { opacity: 1; }
+      100% { transform: translateY(110vh) translateX(var(--drift)) rotate(var(--spin)); opacity: 0; }
+    }
+
+    /* Mobile: stack zones + taller stage + teddy lower */
+    @media (max-width: 640px){
+      .card{ padding: 26px 18px; }
+      .stage{ height: min(680px, 76vh); }
+      .zones{
+        grid-template-columns: 1fr;
+        grid-template-rows: 1fr 1fr;
+        inset: 60px 14px 140px 14px;
+        gap: 12px;
+      }
+      .instruction{ font-size: 13px; }
+      .teddy{ width: 94px; height: 94px; top: 94%; }
+      .teddy .emoji{ font-size: 54px; }
+      .toast{ white-space: normal; }
+    }
+  </style>
+</head>
+<body>
+  <div class="halftone"></div>
+
+  <div class="wrap">
+    <div class="card">
+      <div class="badge"><span class="dot"></span> Valentine Question for Julie &lt;3</div>
+      <h1>Julie, will you be my Valentine? 💖</h1>
+      <p>Drag the teddy into a box… (choose wisely 😌)</p>
+
+      <div class="stage" id="stage">
+        <div class="instruction">🧸 Drag the teddy into YES or NO (NO is… kinda rude)</div>
+
+        <div class="zones">
+          <div class="zone yes" id="yesZone">
+            <div class="zoneTitle"><span class="pillIcon">💗</span>YES!!</div>
+          </div>
+
+          <div class="zone no" id="noZone">
+            <div class="zoneTitle"><span class="pillIcon">🙈</span>no…</div>
+          </div>
+        </div>
+
+        <div class="teddy" id="teddy" role="button" aria-label="Draggable teddy">
+          <div class="emoji">🧸</div>
+        </div>
+
+        <div class="toast" id="toast">don’t touch me 😤</div>
+
+        <div class="pop" id="pop">
+          <div class="popText">YAYYY YOUUU SAYY YESSS!!!! &lt;3333</div>
+        </div>
+
+        <div class="overlay" id="overlay" aria-hidden="true">
+          <div class="result">
+            <div class="picture-slot" id="pictureSlot">
+              <img src="Screenshot 2026-02-12 220952.jpg" alt="Photo" />
+            </div>
+            <button class="close" id="closeBtn" type="button">close ✨</button>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <script>
+    (() => {
+      const stage = document.getElementById("stage");
+      const teddy = document.getElementById("teddy");
+      const yesZone = document.getElementById("yesZone");
+      const noZone = document.getElementById("noZone");
+      const toast = document.getElementById("toast");
+      const pop = document.getElementById("pop");
+      const overlay = document.getElementById("overlay");
+      const closeBtn = document.getElementById("closeBtn");
+
+      const stageRect = () => stage.getBoundingClientRect();
+      const clamp = (v, min, max) => Math.max(min, Math.min(max, v));
+
+      // --- WebAudio squeak
+      let audioCtx = null;
+      const ensureAudio = () => {
+        if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        if (audioCtx.state === "suspended") audioCtx.resume();
+      };
+      const squeak = (pitch = 760) => {
+        try{
+          ensureAudio();
+          const t0 = audioCtx.currentTime;
+
+          const osc = audioCtx.createOscillator();
+          const gain = audioCtx.createGain();
+          const filter = audioCtx.createBiquadFilter();
+
+          filter.type = "bandpass";
+          filter.frequency.setValueAtTime(1400, t0);
+          filter.Q.setValueAtTime(8, t0);
+
+          osc.type = "square";
+          osc.frequency.setValueAtTime(pitch, t0);
+          osc.frequency.exponentialRampToValueAtTime(pitch * 1.45, t0 + 0.06);
+          osc.frequency.exponentialRampToValueAtTime(pitch * 0.9, t0 + 0.12);
+
+          gain.gain.setValueAtTime(0.0001, t0);
+          gain.gain.exponentialRampToValueAtTime(0.25, t0 + 0.02);
+          gain.gain.exponentialRampToValueAtTime(0.0001, t0 + 0.16);
+
+          osc.connect(filter);
+          filter.connect(gain);
+          gain.connect(audioCtx.destination);
+
+          osc.start(t0);
+          osc.stop(t0 + 0.17);
+        } catch(e){ }
+      };
+
+      // Teddy position
+      const setTeddy = (x, y) => {
+        teddy.dataset.x = String(x);
+        teddy.dataset.y = String(y);
+        teddy.style.left = x + "px";
+        teddy.style.top  = y + "px";
+      };
+      const getTeddy = () => ({
+        x: parseFloat(teddy.dataset.x || "0"),
+        y: parseFloat(teddy.dataset.y || "0"),
+      });
+
+      const home = { x: 0, y: 0 };
+
+      // NO transform (translate + scale)
+      let noScale = 1;
+      let noTx = 0, noTy = 0;
+      const setNoTransform = (tx, ty, scale) => {
+        noTx = tx; noTy = ty; noScale = scale;
+        if (!noGone) noZone.style.transform = `translate(${tx}px, ${ty}px) scale(${scale})`;
+      };
+
+      // state
+      let dragging = false;
+      let offset = { x: 0, y: 0 };
+      let noHits = 0;
+      let noInside = false;
+      let noGone = false;
+
+      const placeInitial = () => {
+        const r = stageRect();
+        teddy.style.transform = "translate(-50%, -50%)";
+        home.x = r.width * 0.50;
+        home.y = r.height * 0.88;
+        setTeddy(home.x, home.y);
+
+        noHits = 0;
+        noInside = false;
+        noGone = false;
+        noZone.classList.remove("gone");
+        setNoTransform(0, 0, 1);
+
+        yesZone.classList.remove("glow");
+        stopSparkles();
+      };
+
+      const showToast = (msg, ms = 900) => {
+        toast.textContent = msg;
+        toast.classList.add("show");
+        window.setTimeout(() => toast.classList.remove("show"), ms);
+      };
+
+      // Hearts
+      const heartChars = ["💗","💖","💘","💝","💕","❤️","🩷"];
+      const spawnHeart = () => {
+        const r = stageRect();
+        const el = document.createElement("div");
+        el.className = "heart";
+        el.textContent = heartChars[Math.floor(Math.random()*heartChars.length)];
+        const left = Math.random() * r.width;
+        const duration = 1800 + Math.random() * 2300;
+        const size = 16 + Math.random() * 22;
+        const drift = (Math.random() * 180 - 90).toFixed(1) + "px";
+        const spin  = (Math.random() * 520 - 260).toFixed(0) + "deg";
+        el.style.left = left + "px";
+        el.style.fontSize = size + "px";
+        el.style.animationDuration = duration + "ms";
+        el.style.setProperty("--drift", drift);
+        el.style.setProperty("--spin", spin);
+        stage.appendChild(el);
+        window.setTimeout(() => el.remove(), duration + 200);
+      };
+      const heartBurst = (count = 170) => {
+        let i = 0;
+        const timer = setInterval(() => {
+          spawnHeart(); spawnHeart();
+          i += 2;
+          if (i >= count) clearInterval(timer);
+        }, 28);
+      };
+
+      // Sparkles inside YES zone
+      const sparkleChars = ["✨","💫","⭐","🌟"];
+      const spawnSparkleInYes = () => {
+        const zr = yesZone.getBoundingClientRect();
+        const sr = stageRect();
+        const el = document.createElement("div");
+        el.className = "sparkle";
+        el.textContent = sparkleChars[Math.floor(Math.random() * sparkleChars.length)];
+        const x = (zr.left - sr.left) + Math.random() * zr.width;
+        const y = (zr.top  - sr.top)  + Math.random() * zr.height;
+        el.style.left = x + "px";
+        el.style.top  = y + "px";
+        stage.appendChild(el);
+        window.setTimeout(() => el.remove(), 600);
+      };
+      let sparkleTimer = null;
+      const startSparkles = () => {
+        if (sparkleTimer) return;
+        sparkleTimer = setInterval(spawnSparkleInYes, 130);
+      };
+      const stopSparkles = () => {
+        if (!sparkleTimer) return;
+        clearInterval(sparkleTimer);
+        sparkleTimer = null;
+      };
+
+      const dist = (a, b) => {
+        const dx = a.x - b.x;
+        const dy = a.y - b.y;
+        return Math.hypot(dx, dy);
+      };
+
+      const maybeGlowYes = () => {
+        const t = getTeddy();
+        const yr = yesZone.getBoundingClientRect();
+        const sr = stageRect();
+        const yesCenter = { x: (yr.left+yr.right)/2 - sr.left, y: (yr.top+yr.bottom)/2 - sr.top };
+        const d = dist(t, yesCenter);
+        const threshold = Math.min(sr.width, sr.height) * 0.28;
+        if (d < threshold) {
+          yesZone.classList.add("glow");
+          startSparkles();
+        } else {
+          yesZone.classList.remove("glow");
+          stopSparkles();
+        }
+      };
+
+      // Poof + sparkle cloud
+      const poofAt = (clientX, clientY) => {
+        const sr = stageRect();
+        const baseX = clientX - sr.left;
+        const baseY = clientY - sr.top;
+
+        for (let i = 0; i < 18; i++){
+          const dot = document.createElement("div");
+          dot.className = "poof";
+          dot.style.left = baseX + "px";
+          dot.style.top  = baseY + "px";
+          dot.style.setProperty("--dx", (Math.random()*140 - 70).toFixed(1) + "px");
+          dot.style.setProperty("--dy", (Math.random()*120 - 60).toFixed(1) + "px");
+          stage.appendChild(dot);
+          setTimeout(() => dot.remove(), 800);
+        }
+
+        for (let i = 0; i < 22; i++){
+          const sp = document.createElement("div");
+          sp.className = "sparkle";
+          sp.textContent = sparkleChars[Math.floor(Math.random()*sparkleChars.length)];
+          sp.style.left = (baseX + (Math.random()*160 - 80)) + "px";
+          sp.style.top  = (baseY + (Math.random()*140 - 70)) + "px";
+          stage.appendChild(sp);
+          setTimeout(() => sp.remove(), 650);
+        }
+      };
+
+      const showPopThenPictures = () => {
+        overlay.classList.remove("show");
+        overlay.setAttribute("aria-hidden", "true");
+
+        pop.classList.remove("hide");
+        pop.classList.add("show");
+
+        setTimeout(() => {
+          pop.classList.remove("show");
+          pop.classList.add("hide");
+        }, 650);
+
+        setTimeout(() => {
+          overlay.classList.add("show");
+          overlay.setAttribute("aria-hidden", "false");
+        }, 650 + 900);
+      };
+
+      closeBtn.addEventListener("click", () => {
+        overlay.classList.remove("show");
+        overlay.setAttribute("aria-hidden", "true");
+      });
+
+      const getLocalPoint = (clientX, clientY) => {
+        const r = stageRect();
+        return { x: clientX - r.left, y: clientY - r.top };
+      };
+
+      const bounceHome = () => {
+        teddy.style.transition = "left 260ms cubic-bezier(.2,1.2,.2,1), top 260ms cubic-bezier(.2,1.2,.2,1)";
+        setTeddy(home.x, home.y);
+        setTimeout(() => teddy.style.transition = "", 280);
+      };
+
+      const intersects = (a, b) => !(a.right < b.left || a.left > b.right || a.bottom < b.top || a.top > b.bottom);
+
+      // NO runs away (teleport in safe range)
+      const runAwayNo = () => {
+        if (noGone) return;
+
+        const sr = stageRect();
+        const zr = noZone.getBoundingClientRect();
+        const zoneW = zr.width;
+        const zoneH = zr.height;
+
+        const maxX = Math.max(24, (sr.width  - zoneW) * 0.25);
+        const maxY = Math.max(24, (sr.height - zoneH) * 0.20);
+
+        const tx = (Math.random()*2 - 1) * maxX;
+        const ty = (Math.random()*2 - 1) * maxY;
+
+        setNoTransform(clamp(tx, -maxX, maxX), clamp(ty, -maxY, maxY), noScale);
+      };
+
+      const noMessages = [
+        "don’t touch me 😤",
+        "stoppppp 😭",
+        "NOPE 😳",
+        "pls… go YES 💗",
+        "OK BYE BYE 😌"
+      ];
+
+      const onNoEntered = () => {
+        if (noGone) return;
+
+        squeak(720 + noHits * 40);
+        runAwayNo();
+
+        noHits += 1;
+
+        const nextScale = clamp(1 - noHits * 0.12, 0.40, 1);
+        setNoTransform(noTx, noTy, nextScale);
+
+        const msg = noMessages[Math.min(noHits - 1, noMessages.length - 1)];
+        showToast(msg);
+
+        if (navigator.vibrate) navigator.vibrate(18);
+
+        if (noHits >= 5) {
+          noGone = true;
+          const nr = noZone.getBoundingClientRect();
+          poofAt((nr.left + nr.right)/2, (nr.top + nr.bottom)/2);
+          noZone.classList.add("gone");
+          showToast("BYE BYE 😌 you can only say YES now hahahaha!", 1500);
+        }
+      };
+
+      // Teddy center inside NO rect detection
+      const pointInRect = (pt, rect) => pt.x >= rect.left && pt.x <= rect.right && pt.y >= rect.top && pt.y <= rect.bottom;
+
+      teddy.addEventListener("pointerdown", (e) => {
+        e.preventDefault();
+        dragging = true;
+        teddy.classList.add("grabbed");
+        teddy.setPointerCapture(e.pointerId);
+
+        ensureAudio();
+
+        const p = getLocalPoint(e.clientX, e.clientY);
+        const t = getTeddy();
+        offset.x = t.x - p.x;
+        offset.y = t.y - p.y;
+
+        noInside = false;
+
+        if (navigator.vibrate) navigator.vibrate(12);
+      });
+
+      teddy.addEventListener("pointermove", (e) => {
+        if (!dragging) return;
+
+        const r = stageRect();
+        const p = getLocalPoint(e.clientX, e.clientY);
+
+        const bw = teddy.offsetWidth;
+        const bh = teddy.offsetHeight;
+
+        const x = clamp(p.x + offset.x, bw/2 + 10, r.width  - bw/2 - 10);
+        const y = clamp(p.y + offset.y, bh/2 + 10, r.height - bh/2 - 10);
+
+        setTeddy(x, y);
+
+        maybeGlowYes();
+
+        if (!noGone) {
+          const tr = teddy.getBoundingClientRect();
+          const teddyCenterClient = { x: (tr.left+tr.right)/2, y: (tr.top+tr.bottom)/2 };
+          const nr = noZone.getBoundingClientRect();
+          const insideNow = pointInRect(teddyCenterClient, nr);
+
+          if (insideNow && !noInside) {
+            noInside = true;
+            onNoEntered();
+          }
+          if (!insideNow && noInside) {
+            noInside = false;
+          }
+        }
+      });
+
+      teddy.addEventListener("pointerup", () => {
+        dragging = false;
+        teddy.classList.remove("grabbed");
+
+        yesZone.classList.remove("glow");
+        stopSparkles();
+
+        const tr = teddy.getBoundingClientRect();
+        const yr = yesZone.getBoundingClientRect();
+
+        if (intersects(tr, yr)) {
+          if (navigator.vibrate) navigator.vibrate([20, 40, 20]);
+          heartBurst(170);
+          showPopThenPictures();
+
+          const sr = stageRect();
+          const yc = { x: (yr.left+yr.right)/2 - sr.left, y: (yr.top+yr.bottom)/2 - sr.top };
+          teddy.style.transition = "left 200ms ease, top 200ms ease";
+          setTeddy(yc.x, yc.y);
+          setTimeout(() => teddy.style.transition = "", 240);
+          return;
+        }
+
+        bounceHome();
+      });
+
+      teddy.addEventListener("pointercancel", () => {
+        dragging = false;
+        teddy.classList.remove("grabbed");
+        yesZone.classList.remove("glow");
+        stopSparkles();
+        bounceHome();
+      });
+
+      placeInitial();
+      window.addEventListener("resize", placeInitial);
+    })();
+  </script>
+</body>
+</html>
