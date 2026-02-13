@@ -441,38 +441,78 @@
 
     /* ✅ Mobile: stack zones + increase teddy lane so nothing overlaps */
     @media (max-width: 640px){
-      :root{ --teddy-lane: 150px; }
+  :root{ --teddy-lane: 140px; }
 
-      .wrap{ align-items: flex-start; padding: 14px; }
-      .card{ padding: 24px 16px; }
+  .wrap{
+    align-items: flex-start;
+    padding: 10px;
+  }
 
-      .stage{
-        min-height: 720px; /* enough space for stacked boxes + teddy lane */
-      }
+  /* ✅ make the white card smaller */
+  .card{
+    width: min(560px, 94vw);
+    padding: 16px 12px;
+    border-radius: 22px;
+  }
 
-      .zones{
-        grid-template-columns: 1fr;
-        gap: 12px;
-        left: 14px; right: 14px;
-        top: 60px;
-        bottom: calc(14px + var(--teddy-lane));
-      }
+  .badge{
+    padding: 9px 12px;
+    font-size: 13px;
+  }
 
-      .zone{ min-height: 220px; }
-      .instruction{ font-size: 13px; }
+  h1{
+    margin: 10px 0 8px;
+    font-size: 30px;
+  }
 
-      .teddy{
-        width: 96px;
-        height: 96px;
-        bottom: 18px;
-      }
-      .teddy .emoji{ font-size: 54px; }
+  p{
+    margin: 0 0 10px;
+    font-size: 15px;
+  }
 
-      .toast{
-        bottom: calc(18px + 96px + 10px);
-        white-space: normal;
-      }
-    }
+  /* ✅ stage smaller + still safe */
+  .stage{
+    min-height: 640px;
+    border-radius: 20px;
+  }
+
+  .instruction{
+    font-size: 12.5px;
+    padding: 8px 12px;
+  }
+
+  .zones{
+    left: 12px; right: 12px;
+    top: 56px;
+    gap: 10px;
+    bottom: calc(12px + var(--teddy-lane));
+  }
+
+  .zone{
+    min-height: 200px;
+    border-radius: 20px;
+  }
+
+  .zoneTitle{
+    padding: 12px 14px;
+    font-size: 20px;
+  }
+
+  .teddy{
+    width: 92px;
+    height: 92px;
+    bottom: 14px;
+  }
+  .teddy .emoji{ font-size: 52px; }
+
+  .toast{
+    bottom: calc(14px + 92px + 10px);
+    white-space: normal;
+    font-size: 13px;
+    padding: 8px 12px;
+  }
+}
+
   </style>
 </head>
 
