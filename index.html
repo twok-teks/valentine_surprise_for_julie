@@ -2,8 +2,9 @@
 <html lang="en">
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
   <title>Valentine Question for Julie &lt;3</title>
+
   <style>
     :root{
       --bg1:#ffe6f1;
@@ -11,20 +12,29 @@
       --card:#ffffffcc;
       --ink:#2a1b27;
       --pink:#ff4fa3;
-      --pink2:#ff86c6;
       --shadow: 0 18px 60px rgba(30, 0, 20, 0.15);
       --ring: 0 0 0 6px rgba(255,79,163,0.18);
       --radius: 28px;
       --font: ui-rounded, system-ui, -apple-system, Segoe UI, Roboto, "Helvetica Neue", Arial;
+
+      /* reserved space at bottom inside the stage for teddy */
+      --teddy-lane: 120px;
     }
 
     *{ box-sizing:border-box; }
     html,body{ height:100%; }
+
     body{
       margin:0;
       font-family: var(--font);
       color: var(--ink);
-      overflow:hidden;
+
+      /* ✅ mobile-safe: allow scroll, use stable viewport height */
+      min-height: 100svh;
+      overflow-x: hidden;
+      overflow-y: auto;
+
+      padding: env(safe-area-inset-top) 0 env(safe-area-inset-bottom);
       background:
         radial-gradient(1200px 700px at 20% 15%, #ffffff 0%, transparent 55%),
         radial-gradient(900px 600px at 85% 20%, #ffffff 0%, transparent 55%),
@@ -32,20 +42,23 @@
     }
 
     .halftone{
-      position:absolute; inset:-40px;
+      position:fixed; inset:-40px;
       background-image: radial-gradient(rgba(255, 79, 163, 0.18) 1px, transparent 1px);
       background-size: 18px 18px;
       opacity:0.25;
       pointer-events:none;
       transform: rotate(-6deg);
+      z-index: 0;
     }
 
     .wrap{
       position:relative;
-      height:100%;
-      display:grid;
-      place-items:center;
-      padding:18px;
+      z-index: 1;
+      min-height: 100svh;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      padding: 18px;
     }
 
     .card{
@@ -80,7 +93,7 @@
 
     h1{
       margin: 14px 0 10px;
-      font-size: clamp(32px, 5.2vw, 58px);
+      font-size: clamp(30px, 5.2vw, 58px);
       line-height:1.04;
       letter-spacing:-0.6px;
     }
@@ -92,10 +105,15 @@
       max-width: 64ch;
     }
 
+    /* ✅ Stage is now “content + zones + teddy lane” */
     .stage{
       position: relative;
       width: min(900px, 94vw);
-      height: min(560px, 66vh); /* slightly taller */
+
+      /* mobile-safe: stage is not tied aggressively to vh */
+      min-height: 520px;
+      height: auto;
+
       margin: 14px auto 0;
       border-radius: 24px;
       background:
@@ -104,6 +122,8 @@
       border: 1px solid rgba(255,255,255,0.7);
       box-shadow: 0 14px 40px rgba(30,0,20,0.10) inset;
       overflow:hidden;
+
+      /* allow pointer drag but keep page scroll working */
       touch-action: none;
     }
 
@@ -126,9 +146,16 @@
       max-width: 92%;
     }
 
+    /* ✅ Zones are absolutely placed but with a safe teddy lane */
     .zones{
       position:absolute;
-      inset: 58px 16px 120px 16px; /* more bottom padding */
+      top: 58px;
+      left: 16px;
+      right: 16px;
+
+      /* bottom space reserved for teddy */
+      bottom: calc(16px + var(--teddy-lane));
+
       display:grid;
       grid-template-columns: 1fr 1fr;
       gap: 14px;
@@ -147,6 +174,7 @@
       transform-origin: center center;
       transition: transform 180ms ease, box-shadow 180ms ease, border-color 180ms ease, background 180ms ease, opacity 200ms ease;
       will-change: transform;
+      min-height: 180px;
     }
 
     .zoneTitle{
@@ -230,11 +258,12 @@
       100% { opacity:0; transform: translate(var(--dx), var(--dy)) scale(1.8); }
     }
 
+    /* ✅ Teddy is anchored to bottom within the teddy lane */
     .teddy{
       position:absolute;
       left: 50%;
-      top: 92%; /* lower teddy */
-      transform: translate(-50%, -50%);
+      bottom: 18px;        /* always below boxes now */
+      transform: translateX(-50%);
       width: 106px;
       height: 106px;
       border-radius: 28px;
@@ -250,7 +279,8 @@
       transition: transform 120ms ease;
     }
     .teddy:active{ cursor: grabbing; }
-    .teddy.grabbed{ transform: translate(-50%, -50%) scale(1.05); }
+    .teddy.grabbed{ transform: translateX(-50%) scale(1.05); }
+
     .teddy .emoji{
       font-size: 62px;
       transform: translateY(2px);
@@ -260,7 +290,7 @@
     .toast{
       position:absolute;
       left: 50%;
-      bottom: 14px;
+      bottom: calc(18px + 106px + 10px);
       transform: translateX(-50%);
       padding: 10px 14px;
       border-radius: 999px;
@@ -296,6 +326,7 @@
     }
     .pop.show{ animation: popIn 420ms cubic-bezier(.2,1.2,.2,1) forwards; }
     .pop.hide{ animation: popOut 900ms ease forwards; }
+
     .popText{
       text-align:center;
       padding: 18px 22px;
@@ -321,6 +352,7 @@
       opacity:0.9;
       pointer-events:none;
     }
+
     @keyframes popIn{
       0%   { opacity:0; transform: scale(0.55); }
       70%  { opacity:1; transform: scale(1.12); }
@@ -347,6 +379,7 @@
       opacity:1;
       pointer-events:auto;
     }
+
     .result{
       width:min(560px, 92vw);
       border-radius: 26px;
@@ -357,6 +390,7 @@
       text-align:center;
       position:relative;
     }
+
     .picture-slot{
       margin: 10px auto 10px;
       width: min(440px, 84vw);
@@ -405,31 +439,51 @@
       100% { transform: translateY(110vh) translateX(var(--drift)) rotate(var(--spin)); opacity: 0; }
     }
 
-    /* Mobile: stack zones + taller stage + teddy lower */
+    /* ✅ Mobile: stack zones + increase teddy lane so nothing overlaps */
     @media (max-width: 640px){
-      .card{ padding: 26px 18px; }
-      .stage{ height: min(680px, 76vh); }
+      :root{ --teddy-lane: 150px; }
+
+      .wrap{ align-items: flex-start; padding: 14px; }
+      .card{ padding: 24px 16px; }
+
+      .stage{
+        min-height: 720px; /* enough space for stacked boxes + teddy lane */
+      }
+
       .zones{
         grid-template-columns: 1fr;
-        grid-template-rows: 1fr 1fr;
-        inset: 60px 14px 140px 14px;
         gap: 12px;
+        left: 14px; right: 14px;
+        top: 60px;
+        bottom: calc(14px + var(--teddy-lane));
       }
+
+      .zone{ min-height: 220px; }
       .instruction{ font-size: 13px; }
-      .teddy{ width: 94px; height: 94px; top: 94%; }
+
+      .teddy{
+        width: 96px;
+        height: 96px;
+        bottom: 18px;
+      }
       .teddy .emoji{ font-size: 54px; }
-      .toast{ white-space: normal; }
+
+      .toast{
+        bottom: calc(18px + 96px + 10px);
+        white-space: normal;
+      }
     }
   </style>
 </head>
+
 <body>
   <div class="halftone"></div>
 
   <div class="wrap">
     <div class="card">
       <div class="badge"><span class="dot"></span> Valentine Question for Julie &lt;3</div>
-      <h1>Julie, will you be my Valentine? 💖</h1>
-      <p>Drag the teddy into a box… (choose wisely 😌)</p>
+      <h1>Will u be my Valentine?? Babiii Julieee?? 💖</h1>
+      <p>Drag the teddy into a box to choose! :33</p>
 
       <div class="stage" id="stage">
         <div class="instruction">🧸 Drag the teddy into YES or NO (NO is… kinda rude)</div>
@@ -462,7 +516,6 @@
             <button class="close" id="closeBtn" type="button">close ✨</button>
           </div>
         </div>
-
       </div>
     </div>
   </div>
@@ -481,7 +534,7 @@
       const stageRect = () => stage.getBoundingClientRect();
       const clamp = (v, min, max) => Math.max(min, Math.min(max, v));
 
-      // --- WebAudio squeak
+      // WebAudio squeak
       let audioCtx = null;
       const ensureAudio = () => {
         if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
@@ -506,7 +559,7 @@
           osc.frequency.exponentialRampToValueAtTime(pitch * 0.9, t0 + 0.12);
 
           gain.gain.setValueAtTime(0.0001, t0);
-          gain.gain.exponentialRampToValueAtTime(0.25, t0 + 0.02);
+          gain.gain.exponentialRampToValueAtTime(0.24, t0 + 0.02);
           gain.gain.exponentialRampToValueAtTime(0.0001, t0 + 0.16);
 
           osc.connect(filter);
@@ -515,10 +568,10 @@
 
           osc.start(t0);
           osc.stop(t0 + 0.17);
-        } catch(e){ }
+        } catch(e){}
       };
 
-      // Teddy position
+      // Teddy positioning (center-based while dragging)
       const setTeddy = (x, y) => {
         teddy.dataset.x = String(x);
         teddy.dataset.y = String(y);
@@ -530,6 +583,7 @@
         y: parseFloat(teddy.dataset.y || "0"),
       });
 
+      // Home position for teddy (bottom lane)
       const home = { x: 0, y: 0 };
 
       // NO transform (translate + scale)
@@ -538,36 +592,6 @@
       const setNoTransform = (tx, ty, scale) => {
         noTx = tx; noTy = ty; noScale = scale;
         if (!noGone) noZone.style.transform = `translate(${tx}px, ${ty}px) scale(${scale})`;
-      };
-
-      // state
-      let dragging = false;
-      let offset = { x: 0, y: 0 };
-      let noHits = 0;
-      let noInside = false;
-      let noGone = false;
-
-      const placeInitial = () => {
-        const r = stageRect();
-        teddy.style.transform = "translate(-50%, -50%)";
-        home.x = r.width * 0.50;
-        home.y = r.height * 0.88;
-        setTeddy(home.x, home.y);
-
-        noHits = 0;
-        noInside = false;
-        noGone = false;
-        noZone.classList.remove("gone");
-        setNoTransform(0, 0, 1);
-
-        yesZone.classList.remove("glow");
-        stopSparkles();
-      };
-
-      const showToast = (msg, ms = 900) => {
-        toast.textContent = msg;
-        toast.classList.add("show");
-        window.setTimeout(() => toast.classList.remove("show"), ms);
       };
 
       // Hearts
@@ -588,7 +612,7 @@
         el.style.setProperty("--drift", drift);
         el.style.setProperty("--spin", spin);
         stage.appendChild(el);
-        window.setTimeout(() => el.remove(), duration + 200);
+        setTimeout(() => el.remove(), duration + 200);
       };
       const heartBurst = (count = 170) => {
         let i = 0;
@@ -599,7 +623,7 @@
         }, 28);
       };
 
-      // Sparkles inside YES zone
+      // YES sparkles
       const sparkleChars = ["✨","💫","⭐","🌟"];
       const spawnSparkleInYes = () => {
         const zr = yesZone.getBoundingClientRect();
@@ -612,7 +636,7 @@
         el.style.left = x + "px";
         el.style.top  = y + "px";
         stage.appendChild(el);
-        window.setTimeout(() => el.remove(), 600);
+        setTimeout(() => el.remove(), 600);
       };
       let sparkleTimer = null;
       const startSparkles = () => {
@@ -625,11 +649,7 @@
         sparkleTimer = null;
       };
 
-      const dist = (a, b) => {
-        const dx = a.x - b.x;
-        const dy = a.y - b.y;
-        return Math.hypot(dx, dy);
-      };
+      const dist = (a, b) => Math.hypot(a.x-b.x, a.y-b.y);
 
       const maybeGlowYes = () => {
         const t = getTeddy();
@@ -663,7 +683,6 @@
           stage.appendChild(dot);
           setTimeout(() => dot.remove(), 800);
         }
-
         for (let i = 0; i < 22; i++){
           const sp = document.createElement("div");
           sp.className = "sparkle";
@@ -673,6 +692,12 @@
           stage.appendChild(sp);
           setTimeout(() => sp.remove(), 650);
         }
+      };
+
+      const showToast = (msg, ms = 900) => {
+        toast.textContent = msg;
+        toast.classList.add("show");
+        setTimeout(() => toast.classList.remove("show"), ms);
       };
 
       const showPopThenPictures = () => {
@@ -698,6 +723,7 @@
         overlay.setAttribute("aria-hidden", "true");
       });
 
+      // Helpers
       const getLocalPoint = (clientX, clientY) => {
         const r = stageRect();
         return { x: clientX - r.left, y: clientY - r.top };
@@ -710,6 +736,7 @@
       };
 
       const intersects = (a, b) => !(a.right < b.left || a.left > b.right || a.bottom < b.top || a.top > b.bottom);
+      const pointInRect = (pt, rect) => pt.x >= rect.left && pt.x <= rect.right && pt.y >= rect.top && pt.y <= rect.bottom;
 
       // NO runs away (teleport in safe range)
       const runAwayNo = () => {
@@ -728,6 +755,13 @@
 
         setNoTransform(clamp(tx, -maxX, maxX), clamp(ty, -maxY, maxY), noScale);
       };
+
+      // State
+      let dragging = false;
+      let offset = { x: 0, y: 0 };
+      let noHits = 0;
+      let noInside = false;
+      let noGone = false;
 
       const noMessages = [
         "don’t touch me 😤",
@@ -758,13 +792,35 @@
           const nr = noZone.getBoundingClientRect();
           poofAt((nr.left + nr.right)/2, (nr.top + nr.bottom)/2);
           noZone.classList.add("gone");
-          showToast("BYE BYE 😌 you can only say YES now hahahaha!", 1500);
+          showToast("BYE BYE 😌 you can only say YES now hahahaha!", 1600);
         }
       };
 
-      // Teddy center inside NO rect detection
-      const pointInRect = (pt, rect) => pt.x >= rect.left && pt.x <= rect.right && pt.y >= rect.top && pt.y <= rect.bottom;
+      const placeInitial = () => {
+        const r = stageRect();
 
+        // Make teddy use top/left positioning for drag math
+        teddy.style.top = "0px";
+        teddy.style.left = "0px";
+        teddy.style.transform = "translate(-50%, -50%)";
+
+        // home: centered, inside the teddy lane near bottom
+        home.x = r.width * 0.50;
+        home.y = r.height - 18 - (teddy.offsetHeight / 2);
+        setTeddy(home.x, home.y);
+
+        // reset NO
+        noHits = 0;
+        noInside = false;
+        noGone = false;
+        noZone.classList.remove("gone");
+        setNoTransform(0, 0, 1);
+
+        yesZone.classList.remove("glow");
+        stopSparkles();
+      };
+
+      // Drag
       teddy.addEventListener("pointerdown", (e) => {
         e.preventDefault();
         dragging = true;
@@ -792,6 +848,7 @@
         const bw = teddy.offsetWidth;
         const bh = teddy.offsetHeight;
 
+        // clamp inside stage
         const x = clamp(p.x + offset.x, bw/2 + 10, r.width  - bw/2 - 10);
         const y = clamp(p.y + offset.y, bh/2 + 10, r.height - bh/2 - 10);
 
@@ -799,6 +856,7 @@
 
         maybeGlowYes();
 
+        // entering NO zone detection by teddy center
         if (!noGone) {
           const tr = teddy.getBoundingClientRect();
           const teddyCenterClient = { x: (tr.left+tr.right)/2, y: (tr.top+tr.bottom)/2 };
@@ -809,9 +867,7 @@
             noInside = true;
             onNoEntered();
           }
-          if (!insideNow && noInside) {
-            noInside = false;
-          }
+          if (!insideNow && noInside) noInside = false;
         }
       });
 
@@ -830,6 +886,7 @@
           heartBurst(170);
           showPopThenPictures();
 
+          // snap teddy to YES center
           const sr = stageRect();
           const yc = { x: (yr.left+yr.right)/2 - sr.left, y: (yr.top+yr.bottom)/2 - sr.top };
           teddy.style.transition = "left 200ms ease, top 200ms ease";
