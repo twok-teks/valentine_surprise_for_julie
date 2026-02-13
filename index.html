@@ -17,8 +17,8 @@
       --radius: 28px;
       --font: ui-rounded, system-ui, -apple-system, Segoe UI, Roboto, "Helvetica Neue", Arial;
 
-      /* reserved space at bottom inside the stage for teddy */
       --teddy-lane: 120px;
+      --stage-pad: 16px; /* single source of truth for inner padding */
     }
 
     *{ box-sizing:border-box; }
@@ -29,7 +29,6 @@
       font-family: var(--font);
       color: var(--ink);
 
-      /* ✅ mobile-safe: allow scroll, use stable viewport height */
       min-height: 100svh;
       overflow-x: hidden;
       overflow-y: auto;
@@ -70,6 +69,9 @@
       backdrop-filter: blur(10px);
       padding: 34px 28px;
       position:relative;
+
+      /* ✅ critical: prevents stage/boxes from visually spilling out */
+      overflow: hidden;
     }
 
     .badge{
@@ -83,12 +85,14 @@
       font-weight:900;
       letter-spacing:0.2px;
       font-size: 15px;
+      max-width: 100%;
     }
     .badge .dot{
       width:10px; height:10px;
       border-radius:999px;
       background: var(--pink);
       box-shadow: 0 0 0 6px rgba(255,79,163,0.15);
+      flex: 0 0 auto;
     }
 
     h1{
@@ -105,25 +109,25 @@
       max-width: 64ch;
     }
 
-    /* ✅ Stage is now “content + zones + teddy lane” */
+    /* ✅ stage always fits inside card width */
     .stage{
       position: relative;
-      width: min(900px, 94vw);
-
-      /* mobile-safe: stage is not tied aggressively to vh */
+      width: 100%;
+      max-width: 100%;
       min-height: 520px;
       height: auto;
 
-      margin: 14px auto 0;
+      margin: 14px 0 0;
       border-radius: 24px;
       background:
         radial-gradient(600px 260px at 30% 30%, rgba(255,255,255,0.85), rgba(255,255,255,0.35)),
         linear-gradient(180deg, rgba(255,255,255,0.55), rgba(255,255,255,0.22));
       border: 1px solid rgba(255,255,255,0.7);
       box-shadow: 0 14px 40px rgba(30,0,20,0.10) inset;
-      overflow:hidden;
 
-      /* allow pointer drag but keep page scroll working */
+      /* ✅ keeps NO run-away + sparkles contained */
+      overflow: hidden;
+
       touch-action: none;
     }
 
@@ -143,19 +147,18 @@
       user-select:none;
       pointer-events:none;
       text-align:center;
-      max-width: 92%;
+      max-width: calc(100% - (var(--stage-pad) * 2));
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
     }
 
-    /* ✅ Zones are absolutely placed but with a safe teddy lane */
     .zones{
       position:absolute;
       top: 58px;
-      left: 16px;
-      right: 16px;
-
-      /* bottom space reserved for teddy */
-      bottom: calc(16px + var(--teddy-lane));
-
+      left: var(--stage-pad);
+      right: var(--stage-pad);
+      bottom: calc(var(--stage-pad) + var(--teddy-lane));
       display:grid;
       grid-template-columns: 1fr 1fr;
       gap: 14px;
@@ -190,6 +193,8 @@
       border: 1px solid rgba(255, 79, 163, 0.18);
       box-shadow: 0 14px 40px rgba(30,0,20,0.10);
       user-select:none;
+      max-width: 92%;
+      justify-content:center;
     }
     .zoneTitle .pillIcon{
       width: 34px;
@@ -199,6 +204,7 @@
       place-items:center;
       background: rgba(255, 79, 163, 0.12);
       border: 1px solid rgba(255, 79, 163, 0.15);
+      flex: 0 0 auto;
     }
 
     .zone.yes{
@@ -258,11 +264,10 @@
       100% { opacity:0; transform: translate(var(--dx), var(--dy)) scale(1.8); }
     }
 
-    /* ✅ Teddy is anchored to bottom within the teddy lane */
     .teddy{
       position:absolute;
       left: 50%;
-      bottom: 18px;        /* always below boxes now */
+      bottom: 18px;
       transform: translateX(-50%);
       width: 106px;
       height: 106px;
@@ -280,7 +285,6 @@
     }
     .teddy:active{ cursor: grabbing; }
     .teddy.grabbed{ transform: translateX(-50%) scale(1.05); }
-
     .teddy .emoji{
       font-size: 62px;
       transform: translateY(2px);
@@ -303,8 +307,8 @@
       transition: opacity 200ms ease, transform 200ms ease;
       user-select:none;
       text-align:center;
-      max-width: 92%;
-      white-space: nowrap;
+      max-width: calc(100% - (var(--stage-pad) * 2));
+      white-space: normal;
     }
     .toast.show{
       opacity: 1;
@@ -336,21 +340,10 @@
       box-shadow: 0 22px 70px rgba(30,0,20,0.18);
       font-weight: 1000;
       letter-spacing: -0.4px;
-      font-size: clamp(26px, 4.5vw, 54px);
+      font-size: clamp(24px, 4.8vw, 54px);
       line-height: 1.04;
       position:relative;
-    }
-    .popText::before{
-      content:"";
-      position:absolute;
-      inset:-24px;
-      background:
-        radial-gradient(circle at 20% 30%, rgba(255,79,163,0.35) 0 3px, transparent 4px),
-        radial-gradient(circle at 80% 25%, rgba(255,79,163,0.30) 0 3px, transparent 4px),
-        radial-gradient(circle at 15% 80%, rgba(255,79,163,0.26) 0 3px, transparent 4px),
-        radial-gradient(circle at 85% 78%, rgba(255,79,163,0.32) 0 3px, transparent 4px);
-      opacity:0.9;
-      pointer-events:none;
+      max-width: 92%;
     }
 
     @keyframes popIn{
@@ -389,6 +382,7 @@
       padding: 18px 18px 16px;
       text-align:center;
       position:relative;
+      max-width: 92%;
     }
 
     .picture-slot{
@@ -439,80 +433,79 @@
       100% { transform: translateY(110vh) translateX(var(--drift)) rotate(var(--spin)); opacity: 0; }
     }
 
-    /* ✅ Mobile: stack zones + increase teddy lane so nothing overlaps */
+    /* ✅ Mobile: shrink the card AND keep everything inside */
     @media (max-width: 640px){
-  :root{ --teddy-lane: 140px; }
+      :root{
+        --teddy-lane: 150px;
+        --stage-pad: 12px;
+      }
 
-  .wrap{
-    align-items: flex-start;
-    padding: 10px;
-  }
+      .wrap{
+        align-items:flex-start;
+        padding: 10px;
+      }
 
-  /* ✅ make the white card smaller */
-  .card{
-    width: min(560px, 94vw);
-    padding: 16px 12px;
-    border-radius: 22px;
-  }
+      .card{
+        width: min(560px, 94vw);
+        padding: 16px 12px;
+        border-radius: 22px;
+      }
 
-  .badge{
-    padding: 9px 12px;
-    font-size: 13px;
-  }
+      .badge{
+        padding: 9px 12px;
+        font-size: 13px;
+      }
 
-  h1{
-    margin: 10px 0 8px;
-    font-size: 30px;
-  }
+      h1{
+        margin: 10px 0 8px;
+        font-size: 30px;
+      }
 
-  p{
-    margin: 0 0 10px;
-    font-size: 15px;
-  }
+      p{
+        margin: 0 0 10px;
+        font-size: 15px;
+      }
 
-  /* ✅ stage smaller + still safe */
-  .stage{
-    min-height: 640px;
-    border-radius: 20px;
-  }
+      .stage{
+        min-height: 640px;
+        border-radius: 20px;
+      }
 
-  .instruction{
-    font-size: 12.5px;
-    padding: 8px 12px;
-  }
+      .instruction{
+        font-size: 12.5px;
+        padding: 8px 12px;
+      }
 
-  .zones{
-    left: 12px; right: 12px;
-    top: 56px;
-    gap: 10px;
-    bottom: calc(12px + var(--teddy-lane));
-  }
+      .zones{
+        grid-template-columns: 1fr;
+        gap: 10px;
+        top: 56px;
+        bottom: calc(var(--stage-pad) + var(--teddy-lane));
+      }
 
-  .zone{
-    min-height: 200px;
-    border-radius: 20px;
-  }
+      .zone{
+        min-height: 200px;
+        border-radius: 20px;
+      }
 
-  .zoneTitle{
-    padding: 12px 14px;
-    font-size: 20px;
-  }
+      .zoneTitle{
+        padding: 12px 14px;
+        font-size: 20px;
+      }
 
-  .teddy{
-    width: 92px;
-    height: 92px;
-    bottom: 14px;
-  }
-  .teddy .emoji{ font-size: 52px; }
+      .teddy{
+        width: 92px;
+        height: 92px;
+        bottom: 14px;
+      }
+      .teddy .emoji{ font-size: 52px; }
 
-  .toast{
-    bottom: calc(14px + 92px + 10px);
-    white-space: normal;
-    font-size: 13px;
-    padding: 8px 12px;
-  }
-}
-
+      .toast{
+        bottom: calc(14px + 92px + 10px);
+        font-size: 13px;
+        padding: 8px 12px;
+      }
+    }
   </style>
 </head>
 
@@ -532,7 +525,6 @@
           <div class="zone yes" id="yesZone">
             <div class="zoneTitle"><span class="pillIcon">💗</span>YES!!</div>
           </div>
-
           <div class="zone no" id="noZone">
             <div class="zoneTitle"><span class="pillIcon">🙈</span>no…</div>
           </div>
@@ -556,6 +548,7 @@
             <button class="close" id="closeBtn" type="button">close ✨</button>
           </div>
         </div>
+
       </div>
     </div>
   </div>
@@ -571,8 +564,8 @@
       const overlay = document.getElementById("overlay");
       const closeBtn = document.getElementById("closeBtn");
 
-      const stageRect = () => stage.getBoundingClientRect();
       const clamp = (v, min, max) => Math.max(min, Math.min(max, v));
+      const stageRect = () => stage.getBoundingClientRect();
 
       // WebAudio squeak
       let audioCtx = null;
@@ -584,7 +577,6 @@
         try{
           ensureAudio();
           const t0 = audioCtx.currentTime;
-
           const osc = audioCtx.createOscillator();
           const gain = audioCtx.createGain();
           const filter = audioCtx.createBiquadFilter();
@@ -611,7 +603,7 @@
         } catch(e){}
       };
 
-      // Teddy positioning (center-based while dragging)
+      // Teddy position (center-based)
       const setTeddy = (x, y) => {
         teddy.dataset.x = String(x);
         teddy.dataset.y = String(y);
@@ -623,9 +615,6 @@
         y: parseFloat(teddy.dataset.y || "0"),
       });
 
-      // Home position for teddy (bottom lane)
-      const home = { x: 0, y: 0 };
-
       // NO transform (translate + scale)
       let noScale = 1;
       let noTx = 0, noTy = 0;
@@ -634,7 +623,81 @@
         if (!noGone) noZone.style.transform = `translate(${tx}px, ${ty}px) scale(${scale})`;
       };
 
-      // Hearts
+      // UI helpers
+      const showToast = (msg, ms = 900) => {
+        toast.textContent = msg;
+        toast.classList.add("show");
+        setTimeout(() => toast.classList.remove("show"), ms);
+      };
+
+      const sparkleChars = ["✨","💫","⭐","🌟"];
+      const spawnSparkleInYes = () => {
+        const zr = yesZone.getBoundingClientRect();
+        const sr = stageRect();
+        const el = document.createElement("div");
+        el.className = "sparkle";
+        el.textContent = sparkleChars[Math.floor(Math.random() * sparkleChars.length)];
+        const x = (zr.left - sr.left) + Math.random() * zr.width;
+        const y = (zr.top  - sr.top)  + Math.random() * zr.height;
+        el.style.left = x + "px";
+        el.style.top  = y + "px";
+        stage.appendChild(el);
+        setTimeout(() => el.remove(), 600);
+      };
+      let sparkleTimer = null;
+      const startSparkles = () => {
+        if (sparkleTimer) return;
+        sparkleTimer = setInterval(spawnSparkleInYes, 130);
+      };
+      const stopSparkles = () => {
+        if (!sparkleTimer) return;
+        clearInterval(sparkleTimer);
+        sparkleTimer = null;
+      };
+
+      const dist = (a, b) => Math.hypot(a.x-b.x, a.y-b.y);
+      const maybeGlowYes = () => {
+        const t = getTeddy();
+        const yr = yesZone.getBoundingClientRect();
+        const sr = stageRect();
+        const yesCenter = { x: (yr.left+yr.right)/2 - sr.left, y: (yr.top+yr.bottom)/2 - sr.top };
+        const d = dist(t, yesCenter);
+        const threshold = Math.min(sr.width, sr.height) * 0.28;
+        if (d < threshold) {
+          yesZone.classList.add("glow");
+          startSparkles();
+        } else {
+          yesZone.classList.remove("glow");
+          stopSparkles();
+        }
+      };
+
+      const poofAt = (clientX, clientY) => {
+        const sr = stageRect();
+        const baseX = clientX - sr.left;
+        const baseY = clientY - sr.top;
+
+        for (let i = 0; i < 18; i++){
+          const dot = document.createElement("div");
+          dot.className = "poof";
+          dot.style.left = baseX + "px";
+          dot.style.top  = baseY + "px";
+          dot.style.setProperty("--dx", (Math.random()*140 - 70).toFixed(1) + "px");
+          dot.style.setProperty("--dy", (Math.random()*120 - 60).toFixed(1) + "px");
+          stage.appendChild(dot);
+          setTimeout(() => dot.remove(), 800);
+        }
+        for (let i = 0; i < 22; i++){
+          const sp = document.createElement("div");
+          sp.className = "sparkle";
+          sp.textContent = sparkleChars[Math.floor(Math.random()*sparkleChars.length)];
+          sp.style.left = (baseX + (Math.random()*160 - 80)) + "px";
+          sp.style.top  = (baseY + (Math.random()*140 - 70)) + "px";
+          stage.appendChild(sp);
+          setTimeout(() => sp.remove(), 650);
+        }
+      };
+
       const heartChars = ["💗","💖","💘","💝","💕","❤️","🩷"];
       const spawnHeart = () => {
         const r = stageRect();
@@ -663,83 +726,6 @@
         }, 28);
       };
 
-      // YES sparkles
-      const sparkleChars = ["✨","💫","⭐","🌟"];
-      const spawnSparkleInYes = () => {
-        const zr = yesZone.getBoundingClientRect();
-        const sr = stageRect();
-        const el = document.createElement("div");
-        el.className = "sparkle";
-        el.textContent = sparkleChars[Math.floor(Math.random() * sparkleChars.length)];
-        const x = (zr.left - sr.left) + Math.random() * zr.width;
-        const y = (zr.top  - sr.top)  + Math.random() * zr.height;
-        el.style.left = x + "px";
-        el.style.top  = y + "px";
-        stage.appendChild(el);
-        setTimeout(() => el.remove(), 600);
-      };
-      let sparkleTimer = null;
-      const startSparkles = () => {
-        if (sparkleTimer) return;
-        sparkleTimer = setInterval(spawnSparkleInYes, 130);
-      };
-      const stopSparkles = () => {
-        if (!sparkleTimer) return;
-        clearInterval(sparkleTimer);
-        sparkleTimer = null;
-      };
-
-      const dist = (a, b) => Math.hypot(a.x-b.x, a.y-b.y);
-
-      const maybeGlowYes = () => {
-        const t = getTeddy();
-        const yr = yesZone.getBoundingClientRect();
-        const sr = stageRect();
-        const yesCenter = { x: (yr.left+yr.right)/2 - sr.left, y: (yr.top+yr.bottom)/2 - sr.top };
-        const d = dist(t, yesCenter);
-        const threshold = Math.min(sr.width, sr.height) * 0.28;
-        if (d < threshold) {
-          yesZone.classList.add("glow");
-          startSparkles();
-        } else {
-          yesZone.classList.remove("glow");
-          stopSparkles();
-        }
-      };
-
-      // Poof + sparkle cloud
-      const poofAt = (clientX, clientY) => {
-        const sr = stageRect();
-        const baseX = clientX - sr.left;
-        const baseY = clientY - sr.top;
-
-        for (let i = 0; i < 18; i++){
-          const dot = document.createElement("div");
-          dot.className = "poof";
-          dot.style.left = baseX + "px";
-          dot.style.top  = baseY + "px";
-          dot.style.setProperty("--dx", (Math.random()*140 - 70).toFixed(1) + "px");
-          dot.style.setProperty("--dy", (Math.random()*120 - 60).toFixed(1) + "px");
-          stage.appendChild(dot);
-          setTimeout(() => dot.remove(), 800);
-        }
-        for (let i = 0; i < 22; i++){
-          const sp = document.createElement("div");
-          sp.className = "sparkle";
-          sp.textContent = sparkleChars[Math.floor(Math.random()*sparkleChars.length)];
-          sp.style.left = (baseX + (Math.random()*160 - 80)) + "px";
-          sp.style.top  = (baseY + (Math.random()*140 - 70)) + "px";
-          stage.appendChild(sp);
-          setTimeout(() => sp.remove(), 650);
-        }
-      };
-
-      const showToast = (msg, ms = 900) => {
-        toast.textContent = msg;
-        toast.classList.add("show");
-        setTimeout(() => toast.classList.remove("show"), ms);
-      };
-
       const showPopThenPictures = () => {
         overlay.classList.remove("show");
         overlay.setAttribute("aria-hidden", "true");
@@ -763,7 +749,7 @@
         overlay.setAttribute("aria-hidden", "true");
       });
 
-      // Helpers
+      // Drag mechanics
       const getLocalPoint = (clientX, clientY) => {
         const r = stageRect();
         return { x: clientX - r.left, y: clientY - r.top };
@@ -778,25 +764,44 @@
       const intersects = (a, b) => !(a.right < b.left || a.left > b.right || a.bottom < b.top || a.top > b.bottom);
       const pointInRect = (pt, rect) => pt.x >= rect.left && pt.x <= rect.right && pt.y >= rect.top && pt.y <= rect.bottom;
 
-      // NO runs away (teleport in safe range)
+      // ✅ safer NO “run away”: compute max translate that keeps it inside stage
       const runAwayNo = () => {
         if (noGone) return;
 
         const sr = stageRect();
-        const zr = noZone.getBoundingClientRect();
-        const zoneW = zr.width;
-        const zoneH = zr.height;
+        const nr = noZone.getBoundingClientRect();
 
-        const maxX = Math.max(24, (sr.width  - zoneW) * 0.25);
-        const maxY = Math.max(24, (sr.height - zoneH) * 0.20);
+        // current translate/scale are applied; we’ll keep movement small but safe
+        // Measure NO box size *in layout* (rect is already transformed), so use rect dims.
+        const noW = nr.width;
+        const noH = nr.height;
 
-        const tx = (Math.random()*2 - 1) * maxX;
-        const ty = (Math.random()*2 - 1) * maxY;
+        // desired random offset, but clamp so the box stays inside stage padding
+        const pad = 10;
 
-        setNoTransform(clamp(tx, -maxX, maxX), clamp(ty, -maxY, maxY), noScale);
+        // Determine NO's center position relative to stage
+        const noCenterX = (nr.left + nr.right) / 2 - sr.left;
+        const noCenterY = (nr.top + nr.bottom) / 2 - sr.top;
+
+        // How far can we move left/right/up/down without going out of stage?
+        const maxLeft  = noCenterX - (noW / 2) - pad;
+        const maxRight = (sr.width - pad) - (noCenterX + noW / 2);
+        const maxUp    = noCenterY - (noH / 2) - pad;
+        const maxDown  = (sr.height - pad) - (noCenterY + noH / 2);
+
+        // Choose a random direction within safe bounds
+        const randBetween = (min, max) => min + Math.random() * (max - min);
+
+        // translate values are relative to its original position, so we accumulate by setting tx/ty
+        // pick a target delta from current translate
+        const dx = randBetween(-Math.min(80, maxLeft),  Math.min(80, maxRight));
+        const dy = randBetween(-Math.min(70, maxUp),    Math.min(70, maxDown));
+
+        setNoTransform(noTx + dx, noTy + dy, noScale);
       };
 
       // State
+      const home = { x: 0, y: 0 };
       let dragging = false;
       let offset = { x: 0, y: 0 };
       let noHits = 0;
@@ -839,12 +844,8 @@
       const placeInitial = () => {
         const r = stageRect();
 
-        // Make teddy use top/left positioning for drag math
-        teddy.style.top = "0px";
-        teddy.style.left = "0px";
         teddy.style.transform = "translate(-50%, -50%)";
-
-        // home: centered, inside the teddy lane near bottom
+        // home: centered near bottom
         home.x = r.width * 0.50;
         home.y = r.height - 18 - (teddy.offsetHeight / 2);
         setTeddy(home.x, home.y);
@@ -860,7 +861,6 @@
         stopSparkles();
       };
 
-      // Drag
       teddy.addEventListener("pointerdown", (e) => {
         e.preventDefault();
         dragging = true;
@@ -875,7 +875,6 @@
         offset.y = t.y - p.y;
 
         noInside = false;
-
         if (navigator.vibrate) navigator.vibrate(12);
       });
 
@@ -888,15 +887,12 @@
         const bw = teddy.offsetWidth;
         const bh = teddy.offsetHeight;
 
-        // clamp inside stage
         const x = clamp(p.x + offset.x, bw/2 + 10, r.width  - bw/2 - 10);
         const y = clamp(p.y + offset.y, bh/2 + 10, r.height - bh/2 - 10);
 
         setTeddy(x, y);
-
         maybeGlowYes();
 
-        // entering NO zone detection by teddy center
         if (!noGone) {
           const tr = teddy.getBoundingClientRect();
           const teddyCenterClient = { x: (tr.left+tr.right)/2, y: (tr.top+tr.bottom)/2 };
@@ -926,7 +922,6 @@
           heartBurst(170);
           showPopThenPictures();
 
-          // snap teddy to YES center
           const sr = stageRect();
           const yc = { x: (yr.left+yr.right)/2 - sr.left, y: (yr.top+yr.bottom)/2 - sr.top };
           teddy.style.transition = "left 200ms ease, top 200ms ease";
@@ -946,6 +941,8 @@
         bounceHome();
       });
 
+      // show hearts fall animation function uses CSS; we only append elements when needed
+      // place initial positions after layout
       placeInitial();
       window.addEventListener("resize", placeInitial);
     })();
